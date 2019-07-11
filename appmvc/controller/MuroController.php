@@ -50,24 +50,91 @@ class MuroController extends ControladorBase{
 			
 		}
 		
-
-		public function mostrarMuro(){
+		public function mostrarAmigos(){
 			if(isset($_SESSION['id'])&& isset($_SESSION['mail'])){
 				$mail=$_SESSION["mail"];
+
 				$us=new Usuario($this->adapter);
-				
-				
 				$obj=$us->getBy('MAIL',$mail);
-			
 				$us= $this->setearUsuario($obj);
+
 				$pais=new Pais($this->adapter);
 				$allPaises=$pais->getPaises();
 
 				$this->setearSesion($us);
-				 
-				echo $us->imagen_perfil.$us->mail;
-				$this->view('index',array("user"=>$us, "allPaises"=>$allPaises,));
+				
+				$id=$us->id_usuario;
+				$ami= new Amigo($this->adapter);
+				$amigos= $ami->obtenerAmigos($id); //echo $id; echo gettype($amigos);
+
+				
+
+				//foreach ($amigos as $ami) {echo "un amigo es".$ami['ID_USUARIO_R'];}
+				$allAmigos= $this->recuperarAmigos($amigos);
+
+
+
+					
+				$this->view('amigos',array("user"=>$us, "allPaises"=>$allPaises,"amigos"=>$allAmigos,));
 			} else {echo "ups! algo salio mal :(";}
+		}
+			
+		
+			public function recuperarAmigos($amigos){
+
+													foreach ($amigos as $ami) {
+																		$idami= $ami['ID_USUARIO_R'];
+																		$user= new Usuario($this->adapter);
+																		$user2= new Usuario($this->adapter);
+																		$user= $user->getBy('ID_USUARIO',$idami);
+																		$user2=$this->setearUsuario($user);
+																		$allAmigos[]= $user2; } return $allAmigos;}
+
+						public function recuperarPost($posteos){
+
+													foreach ($posteos as $post) {
+																		$idpost= $post['ID_POST'];				
+																		$po= new Post($this->adapter);
+																		$po2= new Post($this->adapter);
+																		$po= $po->getBy('ID_POST',$idpost);
+																		$po2=$this->setearPost($po);
+																		$allPost[]= $po2; } return $allPost;}															
+
+
+		public function mostrarMuro(){
+			if(isset($_SESSION['id'])&& isset($_SESSION['mail'])){
+				$mail=$_SESSION["mail"];
+
+				$us=new Usuario($this->adapter);
+				$obj=$us->getBy('MAIL',$mail);
+				$us= $this->setearUsuario($obj);
+
+				$pais=new Pais($this->adapter);
+				$allPaises=$pais->getPaises();
+
+				$this->setearSesion($us);
+
+				$id=$us->id_usuario; //id de usuario logeadp
+				$ami= new Amigo($this->adapter);
+				$amigos= $ami->obtenerAmigos($id); //obtiene un array con los ids de los amigos - echo $id; echo gettype($amigos);
+				// foreach ($amigos as $ami) {echo $ami->id_usuario_r;}
+
+				//$po= new Post($this->adapter);
+				$po= new Post($this->adapter);
+				
+				
+				foreach ($amigos as $ami) {$idd=$ami['ID_USUARIO_R']; 
+					$po2= $po->getPostAmigos($idd);//obtiene todos los post de 1 amigo
+					echo gettype($po);
+					$posteos=$this->recuperarPost($po2); //si  pones ($posteos) anda// me devuelve un array de objetos post de 1 amigo (todos los post de 1 amigo)
+					$todosPost[]=$posteos;
+												}
+				
+
+
+				
+				$this->view('index',array("user"=>$us, "allPaises"=>$allPaises,"amigos"=>$amigos,"allPost"=>$todosPost,));
+			} else {$this->redirect("Usuario","index");}
 			
 		}
 
@@ -111,10 +178,10 @@ class MuroController extends ControladorBase{
 			$fecha_alta=isset($_POST['fecha_alta'])?$_POST['fecha_alta']:null;
 
 			$hoy=strftime( "%Y-%m-%d-%H-%M-%S", time() );
-			$usuario_ult_mod= $hoy;
+			$fecha_ult_mod= $hoy;
 
 
-			$fecha_ult_mod=isset($_POST['fecha_ult_mod'])?$_POST['fecha_ult_mod']:null;
+			$usuario_ult_mod=isset($_POST['usuario_ult_mod'])?$_POST['usuario_ult_mod']:null;
 			$nombre=isset($_POST['nombre'])?$_POST['nombre']:null;
 			$apellido=isset($_POST['apellido'])?$_POST['apellido']:null;
 			$sexo=isset($_POST['sexo'])?$_POST['sexo']:null;
@@ -130,7 +197,7 @@ class MuroController extends ControladorBase{
 			$nacimiento=isset($_POST['nacimiento'])?$_POST['nacimiento']:null;
 			$imagen_perfil=isset($_POST["actual"])?$_POST["actual"]:NULL;
 			
-					if($imagen_perfil){$imagen_perfil= $this->subirFoto($username);} else {$imagen_perfil=$_POST['actual'];} 
+					if(isset($_FILES['fotoperfil']['name'])){$imagen_perfil= $this->subirFoto($username);}
 			
 
 			$user->__set('id_usuario',$id); 
@@ -223,6 +290,48 @@ public function modificarPerfil(){
 					$user2->__set('nacimiento',$nacimiento);
 					return $user2;}
 
+public function setearPost($po){
+						
+						$id=$po['ID_POST'];
+						$id_usuario=$po['ID_USUARIO'];
+						$descrip=$po['DESCRIPCION'];
+						$fecha=$po['FECHA'];
+						$titulo=$po['TITULO'];
+						$img1=$po['IMAGEN1'];
+						$img2=$po['IMAGEN2'];
+						$img3=$po['IMAGEN3'];
+						$adj=$po['ADJUNTO'];
+						$w1=$po['PALABRA1'];
+						$w2=$po['PALABRA2'];
+						$w3=$po['PALABRA3'];
+						$estado=$po['ESTADO'];
+						$publico=$po['PUBLICO'];
+
+						$po2=new Post($this->adapter);
+
+						$po2->__set('id_post',$id); 
+						$po2->__set('descripcion',$descrip);
+						$po2->__set('fecha',$fecha);
+						$po2->__set('titulo',$titulo);
+						$po2->__set('imagen1',$img1);
+						$po2->__set('imagen2',$img2);
+						$po2->__set('imagen3',$img3);
+						$po2->__set('adjunto',$adj);
+						$po2->__set('palabra1',$w1);
+						$po2->__set('palabra2',$w2);
+						$po2->__set('palabra3',$w3);
+						$po2->__set('estado',$estado);
+						$po2->__set('publico',$publico);
+
+						
+																		$user= new Usuario($this->adapter);
+																		$user2= new Usuario($this->adapter);
+																		$user= $user->getBy('ID_USUARIO',$id_usuario);
+																		$user2=$this->setearUsuario($user);
+						
+						$po2->__set('user',$user2);
+
+						return $po2;} 
 
  	public function subirFoto($username){
 
@@ -237,8 +346,8 @@ if($fileType=="image/jpeg" || $fileType=="image/jpg" || $fileType=="image/png" |
 	$filePath=$imagenes.$fileName;
 	$serverName="http://localhost/AnimalZone/appmvc/public/img/profile/".$fileName;
 	if($result=move_uploaded_file($tmpName, $filePath)){
-		$usuario->__set("fotoperfil",$serverName);}else{echo "no se subio";exit;}}
-		return $serverName;
+		$return=$serverName;}else{echo "no se subio";exit;}}
+		return $return;
 	}
 	
 

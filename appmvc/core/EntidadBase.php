@@ -42,15 +42,32 @@ class EntidadBase{
         
         return $resultSet;
     }
+    public function obtenerAmigos($id){
+        $id= (int)$id;
+		$query=$this->db()->query("SELECT ID_USUARIO_R FROM amigo WHERE ID_USUARIO_S= '$id' AND ESTADO=1;");
+	
+        while ($row = $query->fetch_assoc()) {
+			$resultSet[]=$row;
+		 }
+		 $resultSet=isset($resultSet)?$resultSet:NULL;
+		 return $resultSet;
+    }
+    
 
-    public function getPosts($id){
-        $query=$this->db->query("SELECT * FROM $this->table WHERE ID_USUARIO='$id' ORDER BY FECHA ASC;");
-        while ($row = $query->fetch_object()) {
-            $resultSet[]=$row;
-         }
-         
-         return $resultSet;
-     }
+    public function getPostAmigos($id){
+        $id= (int)$id;
+        $hoy=strftime( "%Y-%m-%d-%H-%M-%S", time() );
+        $fecha = new DateTime();
+        $fecha->sub(new DateInterval('P7D'));
+        $fecha=$fecha->format('Y-m-d H:i:s');
+		$query=$this->db()->query("SELECT * FROM post WHERE ID_USUARIO= '$id' AND FECHA BETWEEN '$fecha' AND '$hoy' ORDER BY FECHA ASC;");
+	
+        while ($row = $query->fetch_assoc()) {
+			$resultSet[]=$row;
+		 }
+		 $resultSet=isset($resultSet)?$resultSet:NULL;
+		 return $resultSet;
+    }
     
     
     public function getById($id){

@@ -203,13 +203,7 @@ $nacimiento=$user['NACIMIENTO'];
 				$user2->__set('cp',$cp);
 				$user2->__set('nacimiento',$nacimiento);
 
-				$post= new Post($this->adapter);
-				$allPost= $post->getPosts($id); //echo gettype($allPost); echo gettype($post);
-			//	foreach ($allPost as $p=>$val){echo $p->id_post." problem in usuariocontroller accion login";}
-
-
-			//	foreach($allPost as $post=>$value){echo $value->titulo. " ".$post->id_post;}
-		     $this->view("index",array("user"=>$user2,"allPost"=>$allPost));}
+		     $this->redirect("Muro","mostrarMuro");}
 				//$this->view("index",array("user"=>$user2,));}
 				 else{
 					echo "<div class=\"alert alert-danger\" role=\"alert\">Contraseña o mail Incorrecto!</div>";

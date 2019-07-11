@@ -20,6 +20,15 @@ class Post extends EntidadBase{
         parent::__construct($table, $adapter);
     }
     
+    public function __get($property) { 
+      if (property_exists($this, $property)) { 
+      return $this->$property; } 
+      }
+      public function __set($property, $value) { 
+      if (property_exists($this, $property)) { 
+      $this->$property = $value; } 
+      return $this; 
+      } 
 
     public function save(){
 		require_once "Usuario.php";
@@ -40,8 +49,8 @@ class Post extends EntidadBase{
 			
 		}
 		else{
-					
-			$query= "INSERT INTO `post`(`ID_POST`, `ID_USUARIO`, `DESCRIPCION`, `FECHA`, `TITULO`, `IMAGEN1`, `IMAGEN2`, `IMAGEN3`, `ADJUNTO`, `PALABRA1`, `PALABRA2`, `PALABRA3`, `ESTADO`, `PUBLICO`) VALUES ('$this->id_post','$this->user->id_usuario','$this->descripcion','$this->fecha','$this->titulo','$this->imagen1','$this->imagen2','$this->imagen3','$this->adjunto','$this->palabra1','$this->palabra2','$this->palabra3','$this->estado','$this->publico');";
+      $id=$this->user->id_usuario;
+			$query= "INSERT INTO `post`(`ID_POST`, `ID_USUARIO`, `DESCRIPCION`, `FECHA`, `TITULO`, `IMAGEN1`, `IMAGEN2`, `IMAGEN3`, `ADJUNTO`, `PALABRA1`, `PALABRA2`, `PALABRA3`, `ESTADO`, `PUBLICO`) VALUES ('$this->id_post','$id','$this->descripcion','$this->fecha','$this->titulo','$this->imagen1','$this->imagen2','$this->imagen3','$this->adjunto','$this->palabra1','$this->palabra2','$this->palabra3','$this->estado','$this->publico');";
 
 			$save=$this->db()->query($query);
 			//$this->db()->error;

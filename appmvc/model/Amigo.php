@@ -1,8 +1,8 @@
 <?php
 
 class Amigo extends EntidadBase{
-	private $usuario_s;
-	private $usuario_r;
+	private $id_usuario_s;
+	private $id_usuario_r;
 	private $estado;
 	private $fecha;
 

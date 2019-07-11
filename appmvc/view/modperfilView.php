@@ -77,7 +77,7 @@
         <input type="hidden" class="form-control" name="estado" id="estado" value="<?php echo $usuario->estado; ?>">
         <input type="hidden" class="form-control" name="usuario_alta" id="usuario_alta" value="<?php echo $usuario->usuario_alta; ?>">
         <input type="hidden" class="form-control" name="fecha_alta" id="fecha_alta" value="<?php echo $usuario->fecha_alta; ?>">
-        <input type="hidden" class="form-control" name="us_ult_mod" id="us_ult_mod" value="<?php echo $usuario->usuario_ult_mod; ?>">
+        <input type="hidden" class="form-control" name="usuario_ult_mod" id="us_ult_mod" value="<?php echo $usuario->usuario_ult_mod; ?>">
         <input type="hidden" class="form-control" name="fecha_ult_mod" id="fecha_ult_mod" value="<?php echo $usuario->fecha_ult_mod; ?>">
         <input type="hidden" class="form-control" name="mail" id="mail" value="<?php echo $usuario->mail; ?>">
         <input type="hidden" class="form-control" name="username" id="id" value="<?php echo $usuario->username; ?>">

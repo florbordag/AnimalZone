@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
-  <body style="background-color:white; color:black;">
+  <body>
   <header>
           
           <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -51,18 +51,17 @@
           <br>
     </header>
 
-
-</div></div>
-      
-
 <div class="container-fluid">
-<div class="row">
-  <div class="d-none d-md-none d-xl-block">
+  <div class="row">
+    <div class="d-none d-md-none d-xl-block">
 <div class="col">
 <div class="card" style="width: 18rem;">
   <img src="<?PHP echo $user->imagen_perfil; ?>" class="card-img-top" alt="...">
   <div class="card-body">
-    <h5 class="card-title"><?php echo $user->nombre." ".$user->apellido; ?></h5>
+    <h5 class="card-title"><?Php echo $user->nombre." ".$user->apellido; ?></h5>
+    <h6 class="card-title"><?Php echo "@".$user->username; ?></h6>
+    <small class="text-muted"><?PHP echo $user->mail; ?></small><br>
+    <br>
     <p class="card-text">Una breve descripcion sobre mi persona o intereses.</p>
   </div>
   <ul class="list-group list-group-flush">
@@ -71,58 +70,45 @@
     <li class="list-group-item"><a href="#">Mascota 3</a></li>
   </ul>
   <div class="card-body">
-    <a href="<?PHP echo $helper->url("Muro","modificarPerfil"); ?>" class="card-link">Modificar Perfil</a>
-    <a href="<?PHP echo $helper->url("Muro","cerrarSesion"); ?>" class="card-link">Cerrar Sesión</a>
+    <a href="#" class="card-link">Modificar Perfil</a>
+    <a href="#" class="card-link">Cerrar Sesión</a>
   </div>
 </div></div>
-</div>
+  </div>
 
 
-
-<div class="col">
-  
-<div class="card text-center">
-
-  <div class="card-body" style="height: 15rem;">
-      <div class="form-group">
-          <label for="exampleFormControlTextarea1"> ¿Que hay de nuevo?</label>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">Escribe aqui...</textarea>
+<div class="col" style="padding: 0px; margin:0px;">
+    <form>
+      <div class="row">
+        <div class="col">
+          <input type="text" class="form-control" name="buscar" id="buscar" aria-describedby="helpId" placeholder="Buscar amigo..." style="margin:0px;">
+      </div>
+    <button type="button" class="btn btn-success">Buscar amigo</button></div>
+    </form>
+    <div class="d-flex align-content-stretch flex-wrap" style="margin-top: 40px; padding: 5px;">
+      <div class="overflow-auto" style="max-height: 38rem; margin:0px;">
+        <div class="card-deck" style="margin-left:60px;">
+        <?PHP foreach ($amigos as $ami) {echo 
+   "  <div class=\"card-center\" style=\"width:280px;\">
+     <img src=\"".$ami->imagen_perfil."\"class=\"rounded-circle\" alt=\"nombre amigo\" style=\"width: 150px;\">
+         <div class=\"card-body\">
+             <h6 class=\"card-title\">".$ami->nombre." ".$ami->apellido."</h6>
+             <small class=\"text-muted\">@".$ami->username."</small>
+             <br><br>
+             <p class=\"card-text\"><a href=\"muroamigo.php\">Visitar</a> &nbsp&nbsp&nbsp&nbsp&nbsp <a href=\"Eliminaramigo.php\">Eliminar</a></p>
+             
+             <p class=\"card-text\"><small class=\"text-muted\">Conectado hace 3 minutos</small></p>
+         </div></div>" 
+    ;}?>
         </div>
-      </form>
-    <a href="#" class="btn btn-success">Adjuntar</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-    <a href="#" class="btn btn-success">Postear</a>
-  </div><hr>
 
-
-  <div class="overflow-auto" style="max-height: 28rem">
-<?php 
-foreach($allPost as $post => $value){
-  echo '    <div class="card mb-3">
-  <div class="row no-gutters">
-    <div class="col-lg-4">
-      <img src="'.$user->imagen_perfil.'" class="rounded-circle" alt="mi nombre" style="width:100px;height:100px; padding: 10px;">
-      <p class="card-text"><small class="text-muted">Hace 3 horas.</small></p>
-    </div>
-    <div class="col">
-      <div class="card-body">
-        <h5 class="card-title">@'.$user->username.' <small class="text-muted">'.$value->titulo.'</small></h5>
-        <p class="card-text">Este es un posteo que hizo otro usuario y que sale en mi muro...</p>
-       <a href="#">Ver mas...</a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="#">Comentar.</a>
       </div>
     </div>
-  </div>
-</div>';}
-?>
 
-
-
-        </div>
-        
-    </div>
 </div>
 
 
-<div class="d-none d-sm-none d-md-block">
+  <div class="d-none d-sm-none d-md-block">
 <div class="col">
 
 
@@ -143,9 +129,9 @@ foreach($allPost as $post => $value){
           <div><span><img src="https://i0.wp.com/erizos.mx/wp-content/uploads/2018/01/barney-sexo-tantrico.jpg?resize=100%2C100&ssl=1" class="rounded-circle" style="width:50px; height:50px;">&nbsp&nbsp&nbsp</span><span><a href="perfilamigo.php"  style="text-decoration: none;">Ver perfil</a></span>&nbsp&nbsp&nbsp<span><a class="agregarAmigo"href="#"  style="text-decoration: none;"> Agregar</a></span></div></li></li>
         </ul>
       </div></div></div>
-</div> 
-</div></div>
+ </div> 
 
+</div></div>
 
 
 
