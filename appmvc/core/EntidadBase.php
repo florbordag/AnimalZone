@@ -36,7 +36,7 @@ class EntidadBase{
     public function getPaises(){
         $query=$this->db->query("SELECT * FROM PAIS ORDER BY codigo ASC;");
 
-        while ($row = $query->fetch_object()) {
+        while ($row = $query->fetch_object()) { 
            $resultSet[]=$row;
         }
         
@@ -44,9 +44,12 @@ class EntidadBase{
     }
     public function obtenerAmigos($id){
         $id= (int)$id;
-		$query=$this->db()->query("SELECT ID_USUARIO_R FROM amigo WHERE ID_USUARIO_S= '$id' AND ESTADO=1;");
+		$query=$this->db()->query("SELECT DISTINCT* from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+        where (a.ID_USUARIO_S=$id or a.ID_USUARIO_R=$id)
+        and u.ID_USUARIO != $id
+        and a.ESTADO=1;");
 	
-        while ($row = $query->fetch_assoc()) {
+        while ($row = $query->fetch_object()) {
 			$resultSet[]=$row;
 		 }
 		 $resultSet=isset($resultSet)?$resultSet:NULL;
@@ -54,18 +57,16 @@ class EntidadBase{
     }
     
 
-    public function getPostAmigos($id){
+    public function getMisPost($id){
         $id= (int)$id;
-        $hoy=strftime( "%Y-%m-%d-%H-%M-%S", time() );
-        $fecha = new DateTime();
-        $fecha->sub(new DateInterval('P7D'));
-        $fecha=$fecha->format('Y-m-d H:i:s');
-		$query=$this->db()->query("SELECT * FROM post WHERE ID_USUARIO= '$id' AND FECHA BETWEEN '$fecha' AND '$hoy' ORDER BY FECHA ASC;");
+        
+		$query=$this->db()->query("SELECT * FROM POST WHERE ID_USUARIO= '$id' ORDER BY FECHA ASC;");
 	
-        while ($row = $query->fetch_assoc()) {
-			$resultSet[]=$row;
+            while ($row = $query->fetch_object()) { 
+             $resultSet[]=$row;
+            
 		 }
-		 $resultSet=isset($resultSet)?$resultSet:NULL;
+	     $resultSet=isset($resultSet)?$resultSet:NULL;
 		 return $resultSet;
     }
     
@@ -80,13 +81,41 @@ class EntidadBase{
         return $resultSet;
     }
 
+        
+    public function getAmi($id){
+        $query=$this->db->query("SELECT * FROM usuario WHERE ID_USUARIO=$id;");
+
+        if($row = $query->fetch_object()) {
+           $resultSet=$row;
+        }
+        
+        return $resultSet;
+    }
+
+
+public function postajenos($id){
+    $sql="SELECT p.* FROM post p JOIN amigo a ON p.ID_USUARIO = a.ID_USUARIO_R OR p.ID_USUARIO = a.ID_USUARIO_S
+    WHERE (a.ID_USUARIO_S=$id OR a.ID_USUARIO_R=$id) AND p.ID_USUARIO !=$id;";
+
+    $query=$this->db()->query($sql);
+    while ($row = $query->fetch_object()) { 
+        $resultSet[]=$row;
+       
+    }
+    $resultSet=isset($resultSet)?$resultSet:NULL;
+    return $resultSet;
+}
+
+
+
+
     
     public function getBy($column,$value){
         $sql = "SELECT * FROM $this->table WHERE $column = '$value';";
         $result= $this->db()->query($sql); 
                         if($result->num_rows == 1){
                             $row = $result->fetch_assoc();
-                        }
+                        } else{$row=null;}
                             return $row;
                         }
     

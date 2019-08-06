@@ -10,46 +10,46 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
   <body>
-          <header>
+  <header>
           
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-          <a class="navbar-brand" href="index.html">AnimalZone</a>
-          <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
-              aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="collapsibleNavId">
-              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                  <li class="nav-item active">
-                      <a class="nav-link" href="muro.html">Mi muro<span class="sr-only">(current)</span></a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="amigos.html">Amigos</a>
-                  </li>
-                  <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mascotas</a>
-                      <div class="dropdown-menu" aria-labelledby="dropdownId">
-                          <a class="dropdown-item" href="mascotas.html">Visitar mascota</a>
-                          <a class="dropdown-item" href="agregarmascota.html">Agregar mascota</a>
-                      </div>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="miperfil.html"><span class="perfil">Perfil</span></a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="cerrarSesion.php"><span class="perfil">Cerrar Sesion</span></a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="sugeridos.php"><span class="amiguis">Amigos Sugeridos</span></a>
-                  </li>
-              </ul>
-              <form class="form-inline my-2 my-lg-0">
-                  <input class="form-control mr-sm-2" type="text" name="buscar" placeholder="Deshabilitado :(">
-                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-              </form>
-      </nav>
-      <br>
-</header>
+          <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+              <a class="navbar-brand" href="<?PHP echo $helper->url("Muro","mostrarMuro"); ?>">AnimalZone</a>
+              <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+                  aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="collapsibleNavId">
+                  <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                      <li class="nav-item active">
+                          <a class="nav-link" href="<?PHP echo $helper->url("Muro","miMuro"); ?>">Mi muro<span class="sr-only">(current)</span></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="<?PHP echo $helper->url("Muro","mostrarAmigos"); ?>">Amigos</a>
+                      </li>
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mascotas</a>
+                          <div class="dropdown-menu" aria-labelledby="dropdownId">
+                              <a class="dropdown-item" href="mascotas.html">Visitar mascota</a>
+                              <a class="dropdown-item" href="<?PHP echo $helper->url("Usuario","agregarMascota"); ?>">Agregar mascota</a>
+                          </div>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="<?PHP echo $helper->url("Muro","modificarPerfil"); ?>"><span class="perfil">Perfil</span></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="<?PHP echo $helper->url("Muro","cerrarSesion"); ?>"><span class="perfil">Cerrar Sesion</span></a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="sugeridos.php"><span class="amiguis">Amigos Sugeridos</span></a>
+                      </li>
+                  </ul>
+                  <form class="form-inline my-2 my-lg-0">
+                      <input class="form-control mr-sm-2" type="text" placeholder="Deshabilitado :(">
+                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+                  </form>
+          </nav>
+          <br>
+    </header>
 
 
 <div class="col">
@@ -67,7 +67,7 @@
   <div class="card-body">
     <h5 class="card-title"><?php echo $usuario->nombre." ".$usuario->apellido; ?></h5>
     <div class="form-group">
-      <textarea class="form-control" name="descript" id="descript" rows="5"> Escribe algo sobre ti... </textarea>
+      <textarea class="form-control" name="descript" id="descript" rows="5"> <?php if($usuario->descripcion!=null){echo $usuario->descripcion;}else{echo "Escribe algo sobre ti...";}?> </textarea>
     </div>
     <p class="card-text">Edita tu informacion básica.</p>
 
@@ -75,7 +75,9 @@
         <label class="sr-only" for="id">id_usuario</label>
         <input type="hidden" class="form-control" name="id" id="id" value="<?php echo $usuario->id_usuario; ?>">
         <input type="hidden" class="form-control" name="estado" id="estado" value="<?php echo $usuario->estado; ?>">
-        <input type="hidden" class="form-control" name="usuario_alta" id="usuario_alta" value="<?php echo $usuario->usuario_alta; ?>">
+        <input type="hidden" class="form-control" name="descripcion" id="descripcion" value="<?php echo $usuario->descripcion; ?>">
+        <input type="hidden" class="form-control" name="intereses" id="intereses" value="<?php echo $usuario->intereses; ?>">
+        
         <input type="hidden" class="form-control" name="fecha_alta" id="fecha_alta" value="<?php echo $usuario->fecha_alta; ?>">
         <input type="hidden" class="form-control" name="usuario_ult_mod" id="us_ult_mod" value="<?php echo $usuario->usuario_ult_mod; ?>">
         <input type="hidden" class="form-control" name="fecha_ult_mod" id="fecha_ult_mod" value="<?php echo $usuario->fecha_ult_mod; ?>">
@@ -108,7 +110,7 @@
 </div><br>
 <div class="form-check" style="margin-left:15px;">
   <input class="form-check-input" type="radio" name="sexo" id="masc" value="Masculino" <?PHP if($usuario->sexo=="Masculino"){echo "checked";}?>>
-  <label class="form-check-label" for="exampleRadios2">
+  <label class="form-check-label" for="masc">
     Masculino
   </label>
 </div>
@@ -129,6 +131,69 @@
     <label for="animal_fav">¡Ya casi terminas! ¿Cual es tu animal favorito?</label>
     <input type="text" class="form-control" id="animal_fav" name="animal_fav" value="<?php echo $usuario->animal_fav; ?>">
   </div>
+<hr>
+
+<?php $inter= $usuario->intereses; $intereses = explode(",", $inter);
+
+?>
+
+
+<label for="fg"> Marcá tus intereses para que podamos sugerirte algunos amigos ;)</label>
+<div class="form-group" id="fg">
+  <div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="domesticos" value="domesticos" <?php if (in_array("domesticos", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="domesticos">Animales Domésticos</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="salvajes" value="salvajes"  <?php if (in_array("salvajes", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="salvajes">Animales Salvajes</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="extincion" value="extincion" <?php if (in_array("extincion", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="extincion">Animales en extinción</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="ocio" value="ocio" <?php if (in_array("ocio", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="ocio">Ocio</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="viajes" value="viajes"  <?php if (in_array("viajes", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="viajes">Viajes</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="profesional" value="profesional"  <?php if (in_array("profesional", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="profesional">Profesional</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="romantico" value="romantico"  <?php if (in_array("romantico", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="romantico">Romántico</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="amistad" value="amistad"  <?php if (in_array("amistad", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="amistad">Amistad</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="hombres" value="hombres"  <?php if (in_array("hombres", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="hombres">Hombres</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="mujeres" value="mujeres"  <?php if (in_array("mujeres", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="mujeres">Mujeres</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="deporte" value="deporte"  <?php if (in_array("deporte", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="deporte">Deportes</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" name="intereses[]" id="arte" value="arte"  <?php if (in_array("arte", $intereses)) {echo 'checked';}?>>
+  <label class="form-check-label" for="arte">Arte</label>
+</div>
+
+</div>
+
+
+
+
 
   <div class="form-group">
     <label for="pass">Deseas cambiar el Password?</label>

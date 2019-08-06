@@ -30,7 +30,7 @@
                           <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mascotas</a>
                           <div class="dropdown-menu" aria-labelledby="dropdownId">
                               <a class="dropdown-item" href="mascotas.html">Visitar mascota</a>
-                              <a class="dropdown-item" href="agregarmascota.html">Agregar mascota</a>
+                              <a class="dropdown-item" href="<?PHP echo $helper->url("Usuario","agregarMascota"); ?>">Agregar mascota</a>
                           </div>
                       </li>
                       <li class="nav-item">
@@ -60,10 +60,10 @@
   <div class="d-none d-md-none d-xl-block">
 <div class="col">
 <div class="card" style="width: 18rem;">
-  <img src="<?PHP echo $user->imagen_perfil; ?>" class="card-img-top" alt="...">
+  <img src="<?PHP echo $user->imagen_perfil; ?>" class="card-img-top" alt="..." style="width:300px;height:300px;">
   <div class="card-body">
     <h5 class="card-title"><?php echo $user->nombre." ".$user->apellido; ?></h5>
-    <p class="card-text">Una breve descripcion sobre mi persona o intereses.</p>
+    <p class="card-text"><?php echo $user->descripcion; ?></p>
   </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item"><a href="#"><img src="https://buenavida.pr/wp-content/uploads/2017/05/Mascota-1170x780.jpg" style="width: 100px;"><br>Chocolate</a></li>
@@ -71,7 +71,7 @@
     <li class="list-group-item"><a href="#">Mascota 3</a></li>
   </ul>
   <div class="card-body">
-    <a href="<?PHP echo $helper->url("Muro","modificarPerfil"); ?>" class="card-link">Modificar Perfil</a>
+    <a href="<?PHP echo $helper->url("Muro","modificarPerfil"); ?>" class="card-link">Modificar Perfil</a><hr>
     <a href="<?PHP echo $helper->url("Muro","cerrarSesion"); ?>" class="card-link">Cerrar Sesión</a>
   </div>
 </div></div>
@@ -80,39 +80,250 @@
 
 
 <div class="col">
-  
-<div class="card text-center">
 
-  <div class="card-body" style="height: 15rem;">
+<center><a class="btn btn-primary" data-toggle="collapse" href="#post" role="button" aria-expanded="false" aria-controls="post">ESCRIBIR UN POST</a></center>
+
+<div class="card text-center " >
+<div class="collapse multi-collapse" id="post">
+  <form action="<?PHP echo $helper->url("Muro","postear"); ?>" method="post" enctype="multipart/form-data">
+    <div class="card-body">
       <div class="form-group">
-          <label for="exampleFormControlTextarea1"> ¿Que hay de nuevo?</label>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">Escribe aqui...</textarea>
+      
+          <label for="descrip"> ¿Que hay de nuevo?</label> <hr>
+          <div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="public" id="inlineRadio1" value="0" checked>
+  <label class="form-check-label" for="inlineRadio1">Amigos</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="public" id="inlineRadio2" value="1">
+  <label class="form-check-label" for="inlineRadio2">Público</label>
+</div>
+          <input type="text" name="titulo" class="form-control" placeholder="Título...">
+          <textarea class="form-control" id="descrip" name="descrip" rows="3">Escribe aqui...</textarea>
         </div>
-      </form>
-    <a href="#" class="btn btn-success">Adjuntar</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-    <a href="#" class="btn btn-success">Postear</a>
-  </div><hr>
+        <div class="form-group row">
+
+          <div class="col">
+            <label for="kw" class="col-form-label">#</label>
+             <input type="text" id="kw" name="kw" placeholder="hashtag">
+          </div>        
+          <div class="col">
+            <label for="kw2" class="col-form-label">#</label>
+             <input type="text" id="kw2" name="kw2" placeholder="hashtag">
+          </div>
+          <div class="col">
+             <label for="kw3" class="col-form-label">#</label>
+              <input type="text" id="kw3" name="kw3" placeholder="hashtag">
+          </div>   
+
+          </div>
+
+      <hr>
+       (*)Puedes subir hasta 3 imgenes
+      <input type="file" class="form-control-file" name="img1" id="img1" accept="image/png, image/jpeg, image/gif, image/png">
+      <input type="file" class="form-control-file" name="img2" id="img2" accept="image/png, image/jpeg, image/gif, image/png">
+      <input type="file" class="form-control-file" name="img3" id="img3" accept="image/png, image/jpeg, image/gif, image/png">
+      (*)Y un archivo adjunto
+      <input type="file" class="form-control-file" name="adj" id="adj">
+      <input type="submit" value="Postear" name="postear" class="btn btn-success">
+  </form>
+</div>
+
+</div>
+
+  <hr>
+
+
 
 
   <div class="overflow-auto" style="max-height: 28rem">
 <?php 
-foreach($allPost as $post => $value){
+
+foreach($allPost as $post){
+  $hoy= new DateTime();
+  $fecha2 = new DateTime($post->FECHA); 
+  $intervalo = $hoy->diff($fecha2);
+  $txt= $intervalo->format('%i');
+if ((int)$intervalo->format('%H')>0){$txt=$intervalo->format('Hace %h horas');} else {$txt= $intervalo->format('Hace %i minutos');}
+if((int)$intervalo->format('%D')>0){$txt=$intervalo->format('Hace %d días');}
+if((int)$intervalo->format('%M')>0){$txt=$intervalo->format('Hace %m meses');}
+if((int)$intervalo->format('%Y')>1){$txt=$intervalo->format('Hace %y años');}
+if((int)$intervalo->format('%Y')==1){$txt=$intervalo->format('Hace 1 año');}
+if((int)$intervalo->format('%M')==1){$txt=$intervalo->format('Hace 1 mes');}
+if((int)$intervalo->format('%D')==1){$txt=$intervalo->format('Hace 1 día');}
+
+
   echo '    <div class="card mb-3">
   <div class="row no-gutters">
     <div class="col-lg-4">
       <img src="'.$user->imagen_perfil.'" class="rounded-circle" alt="mi nombre" style="width:100px;height:100px; padding: 10px;">
-      <p class="card-text"><small class="text-muted">Hace 3 horas.</small></p>
+      <p class="card-text"><small class="text-muted">'.$txt.'.</small></p>
     </div>
     <div class="col">
       <div class="card-body">
-        <h5 class="card-title">@'.$user->username.' <small class="text-muted">'.$value->titulo.'</small></h5>
-        <p class="card-text">Este es un posteo que hizo otro usuario y que sale en mi muro...</p>
-       <a href="#">Ver mas...</a> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="#">Comentar.</a>
+        <h5 class="card-title">@'.$user->username.' <small class="text-muted">Titulo:'.$post->TITULO.'</small></h5>
+        <p class="card-text">'.$post->DESCRIPCION.'</p>
+
+
+        '; if($post->IMAGEN1!=null){ echo '<img src="'.$post->IMAGEN1.'" style="max-width:500px;">';}
+        if($post->IMAGEN2!=null){ echo '<img src="'.$post->IMAGEN2.'" style="max-width:500px;">';}
+        if($post->IMAGEN3!=null){ echo '<img src="'.$post->IMAGEN3.'" style="max-width:500px;">';}
+       
+        
+        echo'<hr>
+        <a data-toggle="collapse" href="#editpost'.$post->ID_POST.'" role="button" aria-expanded="false" aria-controls="post">Editar</a>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <a data-toggle="collapse" href="#comentar'.$post->ID_POST.'" role="button" aria-expanded="false" aria-controls="post">Comentar</a>
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+        <a data-toggle="collapse" href="#eliminarPost'.$post->ID_POST.'" role="button" aria-expanded="false" aria-controls="post">Eliminar</a>
+
+
+        <div class="collapse multi-collapse" id="eliminarPost'.$post->ID_POST.'">
+        <form action="';echo $helper->url("Muro","eliminarPost");echo '" method="post">
+        <input type="hidden" name="idposteliminar" id="idposteliminar" value="'.$post->ID_POST.'">
+        <div class="alert alert-warning" role="alert">
+       ¿Seguro que quieres eliminar este post?&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input class="alert-link"  type="submit" name="eliminarPost" value="SI" style="border-style:hidden;background-color:transparent;">
+      &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <a data-toggle="collapse" href="#eliminarPost'.$post->ID_POST.'" role="button" aria-expanded="true" aria-controls="post" class="alert-link">Cancelar</a>
+       </div> </form>
+        </div>
+       
+
+<div class="collapse multi-collapse" id="editpost'.$post->ID_POST.'">
+  <form action="';echo $helper->url("Muro","editarPost");echo'" method="post">
+    <div class="card-body">
+      <div class="form-group">
+          <div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="publice" id="inlineRadio1" value="0" checked>
+  <label class="form-check-label" for="inlineRadio1">Amigos</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="publice" id="inlineRadio2" value="1">
+  <label class="form-check-label" for="inlineRadio2">Público</label>
+</div>
+          <input type="text" name="tituloe" class="form-control" value="'.$post->TITULO.'" placeholder="Titulo...">
+          <textarea class="form-control" id="descripe" name="descripe" rows="3">'.$post->DESCRIPCION.'</textarea>
+        </div>
+        <div class="form-group row">
+
+          <div class="col">
+            <label for="kwe1" class="col-form-label">#</label>
+             <input type="text" id="kwe1" name="kwe1" placeholder="hashtag" value="'.$post->PALABRA1.'">
+          </div>        
+          <div class="col">
+            <label for="kwe2" class="col-form-label">#</label>
+             <input type="text" id="kwe2" name="kwe2" placeholder="hashtag" value="'.$post->PALABRA2.'">
+          </div>
+          <div class="col">
+             <label for="kwe3" class="col-form-label">#</label>
+              <input type="text" id="kwe3" name="kwe3" placeholder="hashtag" value="'.$post->PALABRA3.'">
+          </div>   
+          <input type="hidden" class="form-control" name="idpost" idpost="idpost" value="'.$post->ID_POST.'">
+          </div>
+      <input type="submit" value="Editar" name="editar" class="btn btn-success">
+  </form>
+</div>
+</div>
+
+<div class="collapse multi-collapse" id="comentar'.$post->ID_POST.'">
+  <form action="';echo $helper->url("Muro","comentarMimuro");echo'" method="post">
+    <div class="card-body">
+    <div class="form-group">
+          <textarea class="form-control" id="descripc" name="descripc" rows="2">Comentario...</textarea>
+          
+          <input type="hidden" class="form-control" name="idpostc" id="idpostc" value="'.$post->ID_POST.'">
+          <hr>
+          <input type="submit" value="Comentar" name="comentar" class="btn btn-success">
+          </div>
+        </div>
+        </form>
+</div>
+
+
+
       </div>
     </div>
   </div>
-</div>';}
+
+
+  ';   foreach ($coments as $com){
+
+    foreach((array)$com as $c){
+  if($c->post->ID_POST == $post->ID_POST){ 
+  echo '    <div class="card mb-3">
+  <div class="row no-gutters">
+  
+  <div class="col-4">
+  <img src="'.$c->usuario->IMAGEN_PERFIL.'" class="rounded-circle" alt="mi nombre" style="width:65px;height:65px;margin-top:20px;">
+  </div>
+    <div class="col">
+  
+      <div><hr> 
+        <p style="text-align:left;"> </h5>@'.$c->usuario->USERNAME.':  </h5><small class="text-muted">'.$c->descripcion.'</small></p>';
+        
+          if($c->usuario->ID_USUARIO == $user->id_usuario){
+            echo'
+            <a data-toggle="collapse" href="#eliminarComent'.$c->id_comentario.'" role="button" aria-expanded="false" aria-controls="post">Eliminar</a>
+            </div>
+            <div class="collapse multi-collapse" id="eliminarComent'.$c->id_comentario.'">
+            <form action="';echo $helper->url("Muro","eliminarComentario");echo '" method="post">
+            <input type="hidden" name="idComenteliminar" id="idComenteliminar" value="'.$c->id_comentario.'">
+            <div class="alert alert-warning" role="alert">
+           ¿Seguro que quieres eliminar este comentario?&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input class="alert-link"  type="submit" name="eliminarComent" value="SI" style="border-style:hidden;background-color:transparent;">
+          &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <a data-toggle="collapse" href="#eliminarComent'.$c->id_comentario.'" role="button" aria-expanded="true" aria-controls="post" class="alert-link">Cancelar</a>
+           </div> </form>
+            </div>';
+          } else{
+            echo '
+
+            <a data-toggle="collapse"  style="margin-left:65%;" href="#reportarc'.$c->id_comentario.'" role="button" aria-expanded="false" aria-controls="post">Reportar</a>
+            </div>
+            <div class="collapse multi-collapse" id="reportarc'.$c->id_comentario.'">
+            <form action="';echo $helper->url("Muro","reportarComent");echo'" method="post">
+            <div class="card-body">
+            <div class="form-group">Dinos el/los motivo/s de tu reporte:<hr>
+            <input class="form-check-input" type="checkbox" id="motivo1" name="motivo[]" value="Discriminacion">
+            <label class="form-check-label" for="motivo1">Discriminación de cualquier tipo</label><hr>
+            <input class="form-check-input" type="checkbox" id="motivo2" name="motivo[]" value="Lenguaje inadecuado">
+            <label class="form-check-label" for="motivo2">Lenguaje ofensivo o violento</label><hr>
+            <input class="form-check-input" type="checkbox" id="motivo3" name="motivo[]" value="Violencia">
+            <label class="form-check-label" for="motivo3">Violencia</label>
+                  
+                  <input type="hidden" class="form-control" name="idcoment" id="idcoment" value="'.$c->id_comentario.'">
+                  <input type="hidden" class="form-control" name="idpostc" id="idpostc" value="'.$post->id_post.'">
+                  <hr>
+                  <input type="submit" value="Enviar reporte" name="reportarcoment" class="btn btn-success">
+                  </div>
+                </div></form></div>';}
+
+        
+       echo '
+    </div>
+  
+  
+  
+  
+  </div>
+  </div>';}
+  }
+      
+  
+  
+              }
+  
+  echo '</div>';
+
+  }
+
+
+
+
+
 ?>
+
+
+
+
+
 
 
 

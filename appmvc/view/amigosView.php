@@ -30,7 +30,7 @@
                           <a class="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mascotas</a>
                           <div class="dropdown-menu" aria-labelledby="dropdownId">
                               <a class="dropdown-item" href="mascotas.html">Visitar mascota</a>
-                              <a class="dropdown-item" href="agregarmascota.html">Agregar mascota</a>
+                              <a class="dropdown-item" href="<?PHP echo $helper->url("Usuario","agregarMascota"); ?>">Agregar mascota</a>
                           </div>
                       </li>
                       <li class="nav-item">
@@ -56,7 +56,7 @@
     <div class="d-none d-md-none d-xl-block">
 <div class="col">
 <div class="card" style="width: 18rem;">
-  <img src="<?PHP echo $user->imagen_perfil; ?>" class="card-img-top" alt="...">
+  <img src="<?PHP echo $user->imagen_perfil; ?>" class="card-img-top" alt="..." style="width:300px;height:300px;">
   <div class="card-body">
     <h5 class="card-title"><?Php echo $user->nombre." ".$user->apellido; ?></h5>
     <h6 class="card-title"><?Php echo "@".$user->username; ?></h6>
@@ -70,8 +70,8 @@
     <li class="list-group-item"><a href="#">Mascota 3</a></li>
   </ul>
   <div class="card-body">
-    <a href="#" class="card-link">Modificar Perfil</a>
-    <a href="#" class="card-link">Cerrar Sesión</a>
+    <a href="<?PHP echo $helper->url("Muro","modificarPerfil"); ?>" class="card-link">Modificar Perfil</a>
+    <a href="<?PHP echo $helper->url("Muro","cerrarSesion"); ?>" class="card-link">Cerrar Sesión</a>
   </div>
 </div></div>
   </div>
@@ -88,18 +88,21 @@
     <div class="d-flex align-content-stretch flex-wrap" style="margin-top: 40px; padding: 5px;">
       <div class="overflow-auto" style="max-height: 38rem; margin:0px;">
         <div class="card-deck" style="margin-left:60px;">
-        <?PHP foreach ($amigos as $ami) {echo 
+        <?PHP 
+        if($amigos!=null){
+
+        foreach ($amigos as $ami) {echo 
    "  <div class=\"card-center\" style=\"width:280px;\">
-     <img src=\"".$ami->imagen_perfil."\"class=\"rounded-circle\" alt=\"nombre amigo\" style=\"width: 150px;\">
+     <img src=\"".$ami->IMAGEN_PERFIL."\"class=\"rounded-circle\" alt=\"nombre amigo\" style=\"width: 150px; height:150px;\">
          <div class=\"card-body\">
-             <h6 class=\"card-title\">".$ami->nombre." ".$ami->apellido."</h6>
-             <small class=\"text-muted\">@".$ami->username."</small>
+             <h6 class=\"card-title\">".$ami->NOMBRE." ".$ami->APELLIDO."</h6>
+             <small class=\"text-muted\">@".$ami->USERNAME."</small>
              <br><br>
              <p class=\"card-text\"><a href=\"muroamigo.php\">Visitar</a> &nbsp&nbsp&nbsp&nbsp&nbsp <a href=\"Eliminaramigo.php\">Eliminar</a></p>
              
              <p class=\"card-text\"><small class=\"text-muted\">Conectado hace 3 minutos</small></p>
          </div></div>" 
-    ;}?>
+    ;}} else {echo "Aún no tienes amigos. Aqui te dejamos algunas sugerencias para que empieces a cultivar amistades :)";}?>
         </div>
 
       </div>

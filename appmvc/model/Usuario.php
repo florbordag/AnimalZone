@@ -5,7 +5,6 @@ class Usuario extends EntidadBase{
     private $pass;
     private $salt;
     private $estado;
-    private $usuario_alta;
     private $fecha_alta;
     private $usuario_ult_mod;
     private $fecha_ult_mod;
@@ -18,6 +17,8 @@ class Usuario extends EntidadBase{
     private $pais;
     private $cp;
     private $nacimiento;
+    private $descripcion;
+    private $intereses;
 
     
     public function __construct($adapter) {
@@ -42,7 +43,7 @@ function actualizar(){
     $hashedPass = hash('sha256', $saltedPass);
 require_once "Pais.php";
             
-            $query= "UPDATE `usuario` SET `ID_USUARIO`= '$this->id_usuario',`USERNAME`='$this->username',`PASSWORD`='$hashedPass',`SALT`='$this->salt',`ESTADO`='$this->estado',`USUARIO_ALTA`='$this->usuario_alta',`FECHA_ALTA`='$this->fecha_alta',`USUARIO_ULT_MOD`='$this->usuario_ult_mod',`FECHA_ULT_MOD`='$this->fecha_ult_mod',`NOMBRE`='$this->nombre',`APELLIDO`='$this->apellido',`SEXO`='$this->sexo',`MAIL`='$this->mail',`IMAGEN_PERFIL`='$this->imagen_perfil',`ANIMAL_FAV`='$this->animal_fav',`PAIS`='$this->pais->codigo',`CP`='$this->cp',`NACIMIENTO`='$this->nacimiento' WHERE ID_USUARIO= '$this->id_usuario';";
+            $query= "UPDATE `usuario` SET `ID_USUARIO`= '$this->id_usuario',`USERNAME`='$this->username',`PASSWORD`='$hashedPass',`SALT`='$this->salt',`ESTADO`='$this->estado',`FECHA_ALTA`='$this->fecha_alta',`USUARIO_ULT_MOD`='$this->usuario_ult_mod',`FECHA_ULT_MOD`='$this->fecha_ult_mod',`NOMBRE`='$this->nombre',`APELLIDO`='$this->apellido',`SEXO`='$this->sexo',`MAIL`='$this->mail',`IMAGEN_PERFIL`='$this->imagen_perfil',`ANIMAL_FAV`='$this->animal_fav',`PAIS`='$this->pais->codigo',`CP`='$this->cp',`NACIMIENTO`='$this->nacimiento',`DESCRIPCION`='$this->nacimiento',`INTERESES`='$this->nacimiento' WHERE ID_USUARIO= '$this->id_usuario';";
 
             
             $save=$this->db()->query($query);
@@ -59,7 +60,7 @@ require_once "Pais.php";
         $hashedPass = hash('sha256', $saltedPass);
 		require_once "Pais.php";
 		//$codigo= $this->$pais->codigo;		echo $codigo;	
-$query= "INSERT INTO `usuario`(`ID_USUARIO`, `USERNAME`, `PASSWORD`,`SALT`, `ESTADO`, `USUARIO_ALTA`, `FECHA_ALTA`, `USUARIO_ULT_MOD`, `FECHA_ULT_MOD`, `NOMBRE`, `APELLIDO`, `SEXO`, `MAIL`,`IMAGEN_PERFIL`, `ANIMAL_FAV`, `PAIS`, `CP`, `NACIMIENTO`) VALUES (NULL,'$this->username','$hashedPass',$salt,NULL,NULL,NULL,NULL,NULL,'$this->nombre','$this->apellido',NULL,'$this->mail','https://image.freepik.com/iconos-gratis/usuario_318-10541.jpg',NULL,$this->pais->codigo',NULL,NULL);";
+$query= "INSERT INTO `usuario`(`ID_USUARIO`, `USERNAME`, `PASSWORD`,`SALT`, `ESTADO`, `FECHA_ALTA`, `USUARIO_ULT_MOD`, `FECHA_ULT_MOD`, `NOMBRE`, `APELLIDO`, `SEXO`, `MAIL`,`IMAGEN_PERFIL`, `ANIMAL_FAV`, `PAIS`, `CP`, `NACIMIENTO`, `DESCRIPCION`, `INTERESES`) VALUES (NULL,'$this->username','$hashedPass',$salt,NULL,NULL,NULL,NULL,'$this->nombre','$this->apellido',NULL,'$this->mail','https://image.freepik.com/iconos-gratis/usuario_318-10541.jpg',NULL,$this->pais->codigo',NULL,NULL,NULL,NULL);";
 
             $save=$this->db()->query($query);
             //$this->db()->error;
@@ -72,7 +73,7 @@ $query= "INSERT INTO `usuario`(`ID_USUARIO`, `USERNAME`, `PASSWORD`,`SALT`, `EST
             require_once "Pais.php";
             //$codigo= $this->$pais->codigo;		
             //echo $pais;	
-    $query= "INSERT INTO `usuario`(`ID_USUARIO`, `USERNAME`, `PASSWORD`,`SALT`, `ESTADO`, `USUARIO_ALTA`, `FECHA_ALTA`, `USUARIO_ULT_MOD`, `FECHA_ULT_MOD`, `NOMBRE`, `APELLIDO`, `SEXO`, `MAIL`,`IMAGEN_PERFIL`, `ANIMAL_FAV`, `PAIS`, `CP`, `NACIMIENTO`) VALUES (NULL,'$this->username','$this->pass','$this->salt',NULL,NULL,NULL,NULL,NULL,'$this->nombre','$this->apellido',NULL,'$this->mail','https://image.freepik.com/iconos-gratis/usuario_318-10541.jpg',NULL,'$pais',NULL,NULL);";
+    $query= "INSERT INTO `usuario`(`ID_USUARIO`, `USERNAME`, `PASSWORD`,`SALT`, `ESTADO`, `FECHA_ALTA`, `USUARIO_ULT_MOD`, `FECHA_ULT_MOD`, `NOMBRE`, `APELLIDO`, `SEXO`, `MAIL`,`IMAGEN_PERFIL`, `ANIMAL_FAV`, `PAIS`, `CP`, `NACIMIENTO`,`DESCRIPCION`, `INTERESES`) VALUES (NULL,'$this->username','$this->pass','$this->salt',NULL,NULL,NULL,NULL,'$this->nombre','$this->apellido',NULL,'$this->mail','https://image.freepik.com/iconos-gratis/usuario_318-10541.jpg',NULL,'$pais',NULL,NULL,NULL,NULL);";
     
                 $save=$this->db()->query($query);
                 //$this->db()->error;
@@ -90,11 +91,11 @@ $query= "INSERT INTO `usuario`(`ID_USUARIO`, `USERNAME`, `PASSWORD`,`SALT`, `EST
 
                     $num=$this->pais->__get('codigo');
                     $query= "UPDATE usuario set USERNAME= '$this->username', PASSWORD ='$hashedPass',
-                    SALT= '$salt', ESTADO ='$this->estado',USUARIO_ALTA= '$this->usuario_alta', FECHA_ALTA ='$this->fecha_alta',
+                    SALT= '$salt', ESTADO ='$this->estado', FECHA_ALTA ='$this->fecha_alta',
                     USUARIO_ULT_MOD= '$this->usuario_ult_mod', FECHA_ULT_MOD ='$this->fecha_ult_mod',NOMBRE= '$this->nombre', APELLIDO ='$this->apellido',
 
                                 SEXO='$this->sexo', MAIL='$this->mail', IMAGEN_PERFIL='$this->imagen_perfil',
-                                ANIMAL_FAV ='$this->animal_fav',PAIS= '$num', CP='$this->cp', NACIMIENTO='$this->nacimiento'
+                                ANIMAL_FAV ='$this->animal_fav',PAIS= '$num', CP='$this->cp', NACIMIENTO='$this->nacimiento', DESCRIPCION='$this->descripcion', INTERESES='$this->intereses'
                                 WHERE ID_USUARIO = '$this->id_usuario';";
 
                     $save=$this->db()->query($query);
@@ -139,6 +140,17 @@ $result= $this->db()->query($sql);
 $row = $result->fetch_assoc();
 if($result->num_rows > 0){return true;}else{return false;}
 }
+
+
+public function getUsuario($id){
+    $query=$this->db()->query("SELECT * FROM usuario WHERE ID_USUARIO=$id;");
+
+    if($row = $query->fetch_object()) {
+       $resultSet=$row;
+    }
+    //$this->db()->error;
+    return $resultSet;
+  }
 
 
 }
