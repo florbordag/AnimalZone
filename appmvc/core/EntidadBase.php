@@ -106,7 +106,7 @@ class EntidadBase{
         while ($row = $query->fetch_object()) {
 			$resultSet[]=$row;
 		 }
-		 $resultSet=isset($resultSet)?$resultSet:NULL;
+		 $resultSet=isset($resultSet)?$resultSet:NULL; echo $this->db()->error;
 		 return $resultSet;
     }
     public function buscarMiAmigo($username, $yo){
@@ -130,7 +130,7 @@ class EntidadBase{
     public function getMisPost($id){
         $id= (int)$id;
         
-		$query=$this->db()->query("SELECT * FROM POST WHERE ID_USUARIO= '$id' ORDER BY FECHA ASC;");
+		$query=$this->db()->query("SELECT * FROM POST WHERE ID_USUARIO= '$id' ORDER BY FECHA DESC;");
 	
             while ($row = $query->fetch_object()) { 
              $resultSet[]=$row;
@@ -142,7 +142,7 @@ class EntidadBase{
     public function getPostStalk($id){
         $id= (int)$id;
         
-		$query=$this->db()->query("SELECT * FROM POST WHERE ID_USUARIO= '$id' AND PUBLICO=1 ORDER BY FECHA ASC;");
+		$query=$this->db()->query("SELECT * FROM POST WHERE ID_USUARIO= '$id' AND PUBLICO=1 ORDER BY FECHA DESC;");
 	
             while ($row = $query->fetch_object()) { 
              $resultSet[]=$row;

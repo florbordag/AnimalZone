@@ -60,7 +60,7 @@
 </script>
 </div>
 
-<center><a href="<?php echo $helper->url("Moderador","login"); ?>" style="color:#9EE7DD;">Ingresar como moderador</a></center>
+<center><a href="<?php echo $helper->url("Usuario","login2"); ?>" style="color:#9EE7DD;">Ingresar como usuario</a></center>
 </div>
 
 </div>

@@ -40,8 +40,12 @@
                           <a class="nav-link" href="<?PHP echo $helper->url("Muro","cerrarSesion"); ?>"><span class="perfil">Cerrar Sesion</span></a>
                       </li>
                       <li class="nav-item">
-                          <a class="nav-link" href="sugeridos.php"><span class="amiguis">Amigos Sugeridos</span></a>
+                          <a class="nav-link" href="<?PHP echo $helper->url("Muro","mostrarSugeridos"); ?>"><span class="amiguis">Amigos Sugeridos</span></a>
                       </li>
+                      <?PHP if($pendientes!=null){
+                            echo'<li class="nav-item">
+                            <a href="'.$helper->url("Muro","verNotificaciones").'"><img class="noti" title="Solicitudes Pendientes" src="https://image.flaticon.com/icons/png/512/1289/1289475.png" style="width:25px;height:25px;"></a>
+                                </li>';} ?>
                   </ul>
                   <form class="form-inline my-2 my-lg-0" action="<?PHP echo $helper->url("Muro","buscarUsuario");?>" method="post">
                       <input class="form-control mr-sm-2" type="text" name="username" placeholder="Ej: florbordag">
@@ -86,7 +90,7 @@
     <button type="submit" class="btn btn-success"  style="margin-right:20px;margin-left:20px;">Buscar amigo</button></div>
     </form>
     <div class="d-flex align-content-stretch flex-wrap" style="margin-top: 40px; padding: 5px;">
-      <div class="overflow-auto" style="max-height: 38rem; margin:0px;">
+      <div class="overflow-auto" style="max-height: 38rem; margin:0px; min-width:20rem;">
         <div class="card text-center">
 
           <div class="card-deck" style="margin-left:60px;">

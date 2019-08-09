@@ -36,7 +36,8 @@ class MuroController extends ControladorBase{
 
 				$po= new Post($this->adapter);
 				$po= $po->getMisPost($id); //obtiene todos los posteos a mostrar
-				
+				$quieren= new Usuario($this->adapter);
+				$quieren= $quieren->quierenAmistad($id);
 				
 				if($po !=null){
 				
@@ -71,7 +72,7 @@ class MuroController extends ControladorBase{
 								
 							
 				
-				$this->view('miMuro',array("user"=>$us, "allPaises"=>$allPaises,"allPost"=>$posteos,"coments"=>$comentarios, "reportes"=>$report,"sugeridos"=>$sugeridos,));
+				$this->view('miMuro',array("user"=>$us, "allPaises"=>$allPaises,"allPost"=>$posteos,"coments"=>$comentarios, "reportes"=>$report,"sugeridos"=>$sugeridos,"pendientes"=>$quieren,));
 			} else {$this->redirect("Muro","mostrarMuro");}
 
 
@@ -98,9 +99,10 @@ class MuroController extends ControladorBase{
 				
 				$sugeridos=$this->sugeridos();
 
-
+				$quieren= new Usuario($this->adapter);
+				$quieren= $quieren->quierenAmistad($id);
 					
-				$this->view('amigos',array("user"=>$us, "allPaises"=>$allPaises,"amigos"=>$amigos,"sugeridos"=>$sugeridos,"buscar"=>$buscar,));
+				$this->view('amigos',array("user"=>$us, "allPaises"=>$allPaises,"amigos"=>$amigos,"sugeridos"=>$sugeridos,"buscar"=>$buscar,"pendientes"=>$quieren,));
 			} else {echo "ups! algo salio mal :(";}
 		}
 													
@@ -644,6 +646,8 @@ class MuroController extends ControladorBase{
 					$us=new Usuario($this->adapter);
 					$us=$_SESSION['ObjUsuario'];
 					$id=$us->id_usuario;
+					$quieren= new Usuario($this->adapter);
+					$quieren= $quieren->quierenAmistad($id);
 
 					if($_POST['kw1']!=trim("")){ $kw1=$_POST['kw1'];} else {$kw1="kwnula012012012";}
 					if($_POST['kw2']!=trim("")){ $kw2=$_POST['kw2'];} else {$kw2="kwnula012012012";}
@@ -681,8 +685,9 @@ class MuroController extends ControladorBase{
 									$report=new Report($this->adapter);
 									$report = $report->getPReport(); 
 							$kws[0]=$kw1;$kws[1]=$kw2;$kws[2]=$kw3;
+							$sugeridos=$this->sugeridos();
 
-					$this->view('index',array("user"=>$us, "allPaises"=>$allPaises,"allPost"=>$posteos,"coments"=>$comentarios, "reportes"=>$report,));
+					$this->view('index',array("user"=>$us, "allPaises"=>$allPaises,"allPost"=>$posteos,"coments"=>$comentarios, "reportes"=>$report,"pendientes"=>$quieren,"sugeridos"=>$sugeridos,));
 					
 				} else {$this->redirect("Muro","mostrarMuro");}
 			}
@@ -733,8 +738,9 @@ class MuroController extends ControladorBase{
 								$report=new Report($this->adapter);
 								$report = $report->getPReport(); 
 						$kws[0]=$kw1;$kws[1]=$kw2;$kws[2]=$kw3;
+						$sugeridos=$this->sugeridos();
 
-				$this->view('mimuro',array("user"=>$us, "allPaises"=>$allPaises,"allPost"=>$posteos,"coments"=>$comentarios, "reportes"=>$report,));
+				$this->view('mimuro',array("user"=>$us, "allPaises"=>$allPaises,"allPost"=>$posteos,"coments"=>$comentarios, "reportes"=>$report,"sugeridos"=>$sugeridos,));
 				
 			} else {$this->redirect("Muro","miMuro");}
 			}
@@ -801,13 +807,13 @@ class MuroController extends ControladorBase{
 			$usuarioYo=new Usuario($this->adapter);
 			$suj=new Usuario($this->adapter);
 			$usuarioYo=$_SESSION['ObjUsuario'];
-			$inter= $usuarioYo->intereses;
-			$intereses= explode(',',$inter); 
+			$intereses= $usuarioYo->intereses;
+			//$intereses= explode(',',$inter); 
 			
 			$sugeridos= $suj->getNoAmigosXinteres($intereses, $usuarioYo->id_usuario);
 			//echo gettype($sugeridos);
 			
-			//if(is_null($sugeridos)){$sugeridos=$suj->getNoAmigosxPais($u->id_usuario,$u->pais->codigo);}
+			//if($sugeridos==null){$sugeridos=$suj->getNoAmigosxPais($usuarioYo->id_usuario,$usuarioYo->pais);}
 			if($sugeridos==null){$sugeridos=$suj->getNoAmigos($usuarioYo->id_usuario);}
 
 			return $sugeridos;
@@ -828,8 +834,22 @@ class MuroController extends ControladorBase{
 			$amigos= $ami->buscarMiAmigo($username, $yo->id_usuario);
 			$buscar=true;
 
-			$this->view('amigos',array("user"=>$yo,"amigos"=>$amigos,"buscar"=>$buscar,));}
+			$sugeridos=$this->sugeridos();
+			$this->view('amigos',array("user"=>$yo,"amigos"=>$amigos,"buscar"=>$buscar,"sugeridos"=>$sugeridos,));}
 		}
+
+		public function mostrarSugeridos(){
+			$usuarioYo=new Usuario($this->adapter);
+			$usuarioYo=$_SESSION['ObjUsuario'];
+			$suj=new Usuario($this->adapter);
+			$allsugeridos=$suj->getNoAmigos($usuarioYo->id_usuario);
+			$buscar=false;
+			$sugeridos=$this->sugeridos();
+			
+			$quieren= new Usuario($this->adapter);
+				$quieren= $quieren->quierenAmistad($usuarioYo->id_usuario);
+			$this->view('amigos',array("user"=>$usuarioYo,"amigos"=>$allsugeridos,"buscar"=>$buscar,"sugeridos"=>$sugeridos,"pendientes"=>$quieren,));}
+		
 		
 
 		public function stalkUsuario(){
@@ -842,6 +862,8 @@ class MuroController extends ControladorBase{
 
 				$post=new Post($this->adapter);
 				$post=$post->getPostStalk($idami);
+				$quieren= new Usuario($this->adapter);
+				$quieren= $quieren->quierenAmistad($us->id_usuario);
 
 				if($post!=null){
 					foreach($post as $p){$ids[]=$p->ID_POST;}
@@ -867,7 +889,7 @@ class MuroController extends ControladorBase{
 
 				$sugeridos=$this->sugeridos();
 
-				$this->view('verPerfil',array("user"=>$us,"amigo"=>$ami,"post"=>$post,"comentarios"=>$com,"sugeridos"=>$sugeridos,));
+				$this->view('verPerfil',array("user"=>$us,"amigo"=>$ami,"post"=>$post,"comentarios"=>$com,"sugeridos"=>$sugeridos,"pendientes"=>$quieren,));
 			} else {
 				
 				if(isset($_POST['agregarAmigo'])){
@@ -893,7 +915,8 @@ class MuroController extends ControladorBase{
 			$quieren= new Usuario($this->adapter);
 			$quieren= $quieren->quierenAmistad($us->id_usuario); //foreach($quieren as $q){echo $q->NOMBRE;}
 			//echo gettype($quieren);
-			$this->view('noti',array("user"=>$us,"amigos"=>$quieren,));
+			$sugeridos=$this->sugeridos();
+			$this->view('noti',array("user"=>$us,"amigos"=>$quieren,"sugeridos"=>$sugeridos,));
 		}
 
 		public function gestionarSolicitud(){

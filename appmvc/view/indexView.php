@@ -40,7 +40,7 @@
                           <a class="nav-link" href="<?PHP echo $helper->url("Muro","cerrarSesion"); ?>"><span class="perfil">Cerrar Sesion</span></a>
                       </li>
                       <li class="nav-item">
-                          <a class="nav-link" href="sugeridos.php"><span class="amiguis">Amigos Sugeridos</span></a>
+                          <a class="nav-link" href="<?PHP echo $helper->url("Muro","mostrarSugeridos"); ?>"><span class="amiguis">Amigos Sugeridos</span></a>
                       </li>
                         <?PHP if($pendientes!=null){
                             echo'<li class="nav-item">
