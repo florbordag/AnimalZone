@@ -62,10 +62,10 @@ class Post extends EntidadBase{
       $query=$this->db()->query("SELECT * FROM post WHERE ID_POST=$id;");
 
       if($row = $query->fetch_object()) {
-         $resultSet=$row;
-      }
-      
-      return $resultSet;
+        $resultSet=$row;
+     }
+     //$this->db()->error;
+     return $resultSet;
     }
 
     public function getPublicPost($id){
@@ -90,7 +90,42 @@ class Post extends EntidadBase{
 		$query= "DELETE FROM `post` WHERE ID_POST=$id;";
 		$save=$this->db()->query($query);
 		return $save;
-	}
+  }
+  
+  public function getPostByKw($kw1,$kw2,$kw3,$id){
+    $sql="SELECT * FROM 
+    (SELECT * FROM post as posteos WHERE PALABRA1 IN ('$kw1','$kw2','$kw3')
+    OR PALABRA2 IN('$kw1','$kw2','$kw3') OR PALABRA3 IN ('$kw1','$kw2','$kw3') AND ESTADO=1) 
+    AS posteos
+    WHERE ESTADO=1 
+    AND ID_USUARIO!=$id 
+    AND (PUBLICO=1 OR ID_USUARIO IN(SELECT DISTINCT(u.ID_USUARIO) from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+    where (a.ID_USUARIO_S=$id or a.ID_USUARIO_R=$id)
+    and u.ID_USUARIO !=$id
+     and a.ESTADO=1)) ORDER BY FECHA DESC";
+
+    $query=$this->db()->query($sql); //echo $this->db()->error;
+    while ($row = $query->fetch_object()) { 
+        $resultSet[]=$row; 
+       
+    }
+    $resultSet=isset($resultSet)?$resultSet:NULL; 
+    return $resultSet;
+  }
+
+  public function getMisPostByKw($kw1,$kw2,$kw3,$id){
+    $sql="SELECT * FROM post WHERE (PALABRA1 IN ('$kw1','$kw2','$kw3')
+    OR PALABRA2 IN ('$kw1','$kw2','$kw3') OR PALABRA3 IN ('$kw1','$kw2','$kw3'))
+    AND ESTADO=1 AND ID_USUARIO=$id ORDER BY FECHA DESC";
+
+    $query=$this->db()->query($sql); //echo $this->db()->error;
+    while ($row = $query->fetch_object()) { 
+        $resultSet[]=$row; 
+       
+    }
+    $resultSet=isset($resultSet)?$resultSet:NULL; 
+    return $resultSet;
+  }
   
 }
 

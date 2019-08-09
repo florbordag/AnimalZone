@@ -87,7 +87,7 @@
     </form>
     <div class="d-flex align-content-stretch flex-wrap" style="margin-top: 40px; padding: 5px;">
       <div class="overflow-auto" style="max-height: 38rem; margin:0px;">
-        <div class="card text-center">
+        <div class="card text-center" style=" min-width:400px;">
 
           <div class="card-deck" style="margin-left:60px;">
                         <?PHP 
@@ -100,17 +100,16 @@
                                 <h6 class="card-title">'.$ami->NOMBRE." ".$ami->APELLIDO.'</h6>
                                 <small class="text-muted">@'.$ami->USERNAME.'</small>
                                 <br><br>
-                                <form action="';echo $helper->url("Muro","visitarAmigo");echo'" method="post">
+                                <form action="';echo $helper->url("Muro","gestionarSolicitud");echo'" method="post">
                                 <input type="hidden" name="id_amigo" value="'.$ami->ID_USUARIO.'">
-                                <p class="card-text"><input type="submit" name="visitar" value="Visitar" class="btn btn-outline-primary" style="height:35px;">
+                                <p class="card-text"><input type="submit" name="aceptar" value="Aceptar" class="btn btn-outline-primary" style="height:35px;">
                                   &nbsp&nbsp&nbsp&nbsp&nbsp 
-                                  <input type="submit" name="eliminar" value="Eliminar" class="btn btn-outline-primary" style="height:35px;"></p>
+                                  <input type="submit" name="rechazar" value="Rechazar" class="btn btn-outline-primary" style="height:35px;"></p>
                                   </form>
                                 
                                 
                             </div></div>' 
-                        ;}} else {if($buscar){echo "<div class=\"alert alert-danger\" role=\"alert\">UPS! No hay coincidencias en tu busqueda</div>";}
-                        else{echo 'Aún no tienes amigos. Aqui te dejamos algunas sugerencias para que empieces a cultivar amistades :)';}}?>
+                        ;}} else{echo 'No hay solicitudes pendientes';}?>
           </div>
 
 

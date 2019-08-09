@@ -152,6 +152,26 @@ public function getUsuario($id){
     return $resultSet;
   }
 
+   public function buscarUsuariosxNombre($u,$id){
+       $sql="SELECT * FROM `usuario` WHERE USERNAME LIKE '%$u%' AND ID_USUARIO!=$id";
+    $query=$this->db()->query($sql);
+    while ($row = $query->fetch_object()) { 
+        $resultSet[]=$row;
+       
+    }
+    $resultSet=isset($resultSet)?$resultSet:NULL;
+    return $resultSet;
+   }
+
+   public function quierenAmistad($id){
+  $sql="SELECT * FROM usuario WHERE ID_USUARIO IN (SELECT ID_USUARIO_S FROM amigo WHERE ID_USUARIO_R=$id AND ESTADO=0)";
+
+  $query=$this->db()->query($sql);
+  while ($row = $query->fetch_object()) { 
+      $resultSet[]=$row;
+     
+  }$resultSet=isset($resultSet)?$resultSet:NULL;
+   return $resultSet;}
 
 }
 

@@ -62,8 +62,28 @@ require_once ('Report.php');
 		return $resultSet;
 	  }
 
-	  public function getComentarios($id){
-		$sql="SELECT * FROM comentario WHERE ID_POST =$id;";
+
+	public function eliminar($id)
+	{
+		$query= "DELETE FROM `comentario` WHERE ID_COMENTARIO=$id;";
+		$save=$this->db()->query($query);
+		return $save;
+	}
+
+	public function editar(){
+		if($this->id_comentario){
+			  
+		  $query= "UPDATE `comentario` SET `DESCRIPCION`='$this->descripcion' WHERE ID_COMENTARIO=$this->id_comentario;";
+		  
+		  $save=$this->db()->query($query);
+		  //echo $this->db()->error;
+		  return $save;
+		  
+		}
+	  }
+	  public function getComentarios($ids){
+		if(is_array($ids)) {$ides= implode(',',$ids);} else { $ides=$ids;}
+		$sql = 'SELECT * FROM comentario WHERE ID_POST IN (' . $ides . ')';
 	
 		$query=$this->db()->query($sql);
 		while ($row = $query->fetch_object()) { 
@@ -74,12 +94,6 @@ require_once ('Report.php');
 		return $resultSet;
 	}
 
-	public function eliminar($id)
-	{
-		$query= "DELETE FROM `comentario` WHERE ID_COMENTARIO=$id;";
-		$save=$this->db()->query($query);
-		return $save;
-	}
 
 }
 ?>

@@ -41,6 +41,18 @@ require_once ('Post.php');
         return $save;
     }
 
+    public function reportComent(){
+        $idp= $this->post->ID_POST;
+        $idu=$this->usuario->id_usuario;
+        $idc=$this->comentario->ID_COMENTARIO;
+        
+            $query="INSERT INTO `report`(`ID_REPORT`,`ID_POST`, `ID_USUARIO`, `FECHA_DENUNCIA`, `ID_USUARIO_MOD`, `MOTIVO`, `FECHA_MODERACION`, `ID_COMENTARIO`) VALUES (NULL,'$idp','$idu',NOW(),NULL,'$this->motivo',NULL,$idc);";
+
+        $save=$this->db()->query($query);
+        echo $this->db()->error;
+        return $save;
+    }
+
         public function moderar($fecha){
         $query="UPDATE `report` SET `FECHA_MODERACION`= $fecha WHERE ID_COMENTARIO= '$this->id_comentario';";
 

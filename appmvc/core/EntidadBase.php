@@ -56,11 +56,93 @@ class EntidadBase{
 		 return $resultSet;
     }
     
+    public function getNoAmigos($id){
+        $id= (int)$id;
+		$query=$this->db()->query("SELECT * FROM usuario WHERE ID_USUARIO NOT IN (SELECT DISTINCT(ID_USUARIO) from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+        where (a.ID_USUARIO_S=$id or a.ID_USUARIO_R=$id)
+        and u.ID_USUARIO != $id
+        and a.ESTADO=1)
+        AND ID_USUARIO NOT IN (SELECT DISTINCT(ID_USUARIO) from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+        where (a.ID_USUARIO_S=$id or a.ID_USUARIO_R=$id)
+        and u.ID_USUARIO != $id
+        and a.ESTADO=0) AND ID_USUARIO!=$id LIMIT 4");
+	
+        while ($row = $query->fetch_object()) {
+			$resultSet[]=$row;
+		 }
+		 $resultSet=isset($resultSet)?$resultSet:NULL;
+		 return $resultSet;
+    }
+
+    public function getNoAmigosxPais($id, $pais){
+        $id= (int)$id;
+		$query=$this->db()->query("SELECT * FROM usuario WHERE ID_USUARIO NOT IN (SELECT DISTINCT(ID_USUARIO) from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+        where (a.ID_USUARIO_S=$id or a.ID_USUARIO_R=$id)
+        and u.ID_USUARIO != $id
+        and a.ESTADO=1)
+        AND ID_USUARIO NOT IN (SELECT DISTINCT(ID_USUARIO) from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+        where (a.ID_USUARIO_S=$id or a.ID_USUARIO_R=$id)
+        and u.ID_USUARIO != $id
+        and a.ESTADO=0) AND PAIS='$pais' LIMIT 5");
+	
+        while ($row = $query->fetch_object()) {
+			$resultSet[]=$row;
+		 }
+		 $resultSet=isset($resultSet)?$resultSet:NULL;
+		 return $resultSet;
+    }
+
+    public function getNoAmigosXinteres($arr, $id){
+        if(is_array($arr)) {$intereses= implode('% OR INTERESES LIKE %',$arr); $intereses=$intereses.'none%';} else { $intereses=$arr;}
+
+		$query=$this->db()->query("SELECT * FROM usuario WHERE intereses LIKE '$intereses' 
+        AND ID_USUARIO NOT IN(SELECT DISTINCT u.ID_USUARIO from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+        where (a.ID_USUARIO_S=$id or a.ID_USUARIO_R=$id)
+        and u.ID_USUARIO != $id
+        and a.ESTADO=1)
+        AND ID_USUARIO !=$id
+        LIMIT 5");
+	
+        while ($row = $query->fetch_object()) {
+			$resultSet[]=$row;
+		 }
+		 $resultSet=isset($resultSet)?$resultSet:NULL;
+		 return $resultSet;
+    }
+    public function buscarMiAmigo($username, $yo){
+
+		$query=$this->db()->query("SELECT * FROM usuario WHERE ID_USUARIO IN
+        (SELECT DISTINCT u.ID_USUARIO from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+               where (a.ID_USUARIO_S=$yo or a.ID_USUARIO_R=$yo)
+               and u.ID_USUARIO != $yo
+               and a.ESTADO=1)
+       AND USERNAME LIKE '$username' OR MAIL LIKE '$username'");
+	
+        while ($row = $query->fetch_object()) {
+			$resultSet[]=$row;
+		 }
+		 $resultSet=isset($resultSet)?$resultSet:NULL;
+		 return $resultSet;
+    }
+
+
 
     public function getMisPost($id){
         $id= (int)$id;
         
 		$query=$this->db()->query("SELECT * FROM POST WHERE ID_USUARIO= '$id' ORDER BY FECHA ASC;");
+	
+            while ($row = $query->fetch_object()) { 
+             $resultSet[]=$row;
+            
+		 }
+	     $resultSet=isset($resultSet)?$resultSet:NULL;
+		 return $resultSet;
+    }
+    public function getPostStalk($id){
+        $id= (int)$id;
+        
+		$query=$this->db()->query("SELECT * FROM POST WHERE ID_USUARIO= '$id' AND PUBLICO=1 ORDER BY FECHA ASC;");
 	
             while ($row = $query->fetch_object()) { 
              $resultSet[]=$row;
@@ -94,8 +176,14 @@ class EntidadBase{
 
 
 public function postajenos($id){
-    $sql="SELECT p.* FROM post p JOIN amigo a ON p.ID_USUARIO = a.ID_USUARIO_R OR p.ID_USUARIO = a.ID_USUARIO_S
-    WHERE (a.ID_USUARIO_S=$id OR a.ID_USUARIO_R=$id) AND p.ID_USUARIO !=$id;";
+    $sql="SELECT * FROM 
+    (SELECT * FROM post as posteos WHERE ESTADO=1) 
+    AS posteos
+    WHERE ID_USUARIO!=$id 
+    AND (PUBLICO=1 OR ID_USUARIO IN(SELECT DISTINCT(u.ID_USUARIO) from usuario u join amigo a on u.ID_USUARIO=a.ID_USUARIO_S or u.ID_USUARIO=a.ID_USUARIO_R
+    where (a.ID_USUARIO_S=$id or a.ID_USUARIO_R=$id)
+    and u.ID_USUARIO !=$id
+     and a.ESTADO=1)) ORDER BY FECHA DESC";
 
     $query=$this->db()->query($sql);
     while ($row = $query->fetch_object()) { 
