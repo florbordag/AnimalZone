@@ -127,6 +127,20 @@ class Post extends EntidadBase{
     return $resultSet;
   }
   
+  public function activarPost($posteos){
+    $query="UPDATE post SET ESTADO=1 WHERE ID_POST IN ($posteos);";
+
+    $save=$this->db()->query($query);
+    echo $this->db()->error;
+ }
+
+ public function desactivarPost($posteos){
+    $query="UPDATE post SET ESTADO=0 WHERE ID_POST IN ($posteos);";
+
+    $save=$this->db()->query($query);
+    echo $this->db()->error;
+ }
+
 }
 
 ?>

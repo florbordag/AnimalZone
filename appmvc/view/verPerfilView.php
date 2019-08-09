@@ -171,10 +171,10 @@
                                 <div class="col"><br>
                                     <h5 class="card-title">@'.$amigo->USERNAME.' <small class="text-muted">'.$p->TITULO.'&nbsp';if($p->PALABRA1!=null){echo "&nbsp #".$p->PALABRA1;}if($p->PALABRA2!=null){echo "&nbsp #".$p->PALABRA2;}if($p->PALABRA3!=null){echo "&nbsp #".$p->PALABRA3;}echo'</small></h5>
                                     <p class="card-text">'.$p->DESCRIPCION.'</p>
-                                    <div class="d-flex justify-content-center">';
-                                        if($p->IMAGEN1!=null){ echo '<img src="'.$p->IMAGEN1.'" style="max-width:500px;"><BR>';}
-                                        if($p->IMAGEN2!=null){ echo '<img src="'.$p->IMAGEN2.'" style="max-width:500px;"><BR>';}
-                                        if($p->IMAGEN3!=null){ echo '<img src="'.$p->IMAGEN3.'" style="max-width:500px;"><BR>';}
+                                    <div>';
+                                        if($p->IMAGEN1!=null){ echo '<img src="'.$p->IMAGEN1.'" style="max-width:400px;"><HR>';}
+                                        if($p->IMAGEN2!=null){ echo '<img src="'.$p->IMAGEN2.'" style="max-width:400px;"><HR>';}
+                                        if($p->IMAGEN3!=null){ echo '<img src="'.$p->IMAGEN3.'" style="max-width:400px;"><HR>';}
                                     echo'
                                     </div><BR>
                                     <div class="d-flex justify-content-around">

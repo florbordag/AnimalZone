@@ -16,10 +16,10 @@
 <img src="https://i.ibb.co/fQwqd2Z/portada.png" alt="portada" border="0">
 <div class="mx-auto" style="width:300px;margin-top:100px;">
 
-<form class="needs-validation" action="<?php echo $helper->url("usuario","login"); ?>" method="post" novalidate>
+<form class="needs-validation" action="<?php echo $helper->url("Moderador","entrar"); ?>" method="post" novalidate>
   <div class="form-group">
-  <label for="mail">Email</label>
-      <input type="email" class="form-control" id="mail" name="mail" placeholder="Ejemplo@example.com" required>
+  <label for="mail">Usuario</label>
+      <input type="text" class="form-control" id="usuario" name="usuario" placeholder="roberto07mod" required>
       <div class="invalid-feedback">
         Por favor ingrese un email válido.
       </div>

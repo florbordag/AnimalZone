@@ -94,6 +94,19 @@ require_once ('Report.php');
 		return $resultSet;
 	}
 
+	public function activarComent($coment){
+		$query="UPDATE comentario SET ESTADO=1 WHERE ID_COMENTARIO IN ($coment);";
+	
+		$save=$this->db()->query($query);
+		echo $this->db()->error;
+	 }
+	
+	 public function desactivarComent($coment){
+		$query="UPDATE comentario SET ESTADO=0  WHERE ID_COMENTARIO IN ($coment);";
+	
+		$save=$this->db()->query($query);
+		echo $this->db()->error;
+	 }
 
 }
 ?>

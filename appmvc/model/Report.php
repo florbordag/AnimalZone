@@ -53,8 +53,16 @@ require_once ('Post.php');
         return $save;
     }
 
-        public function moderar($fecha){
-        $query="UPDATE `report` SET `FECHA_MODERACION`= $fecha WHERE ID_COMENTARIO= '$this->id_comentario';";
+        public function moderarComent($coments){
+        $query="UPDATE `report` SET `FECHA_MODERACION`= NOW() WHERE ID_COMENTARIO IN ($coments);";
+
+            $save=$this->db()->query($query);
+            
+            return $save;
+    }
+
+    public function moderarPost($post){
+        $query="UPDATE `report` SET `FECHA_MODERACION`= NOW() WHERE ID_POST IN ($post);";
 
             $save=$this->db()->query($query);
             
@@ -80,6 +88,26 @@ require_once ('Post.php');
         
         return $resultSet;
       }
+
+      public function getAllPostReported(){
+        $sql="SELECT p.*,r.ID_REPORT,r.ID_USUARIO as ID_USER_REP,r.FECHA_DENUNCIA,r.MOTIVO,r.FECHA_MODERACION FROM post p JOIN report r ON p.ID_POST=r.ID_POST;";
+      
+        $query=$this->db()->query($sql);
+        while ($row = $query->fetch_object()) { 
+            $resultSet[]=$row;
+           
+        }$resultSet=isset($resultSet)?$resultSet:NULL;
+         return $resultSet;}
+
+         public function getAllComentReported(){
+            $sql="SELECT c.*,r.ID_REPORT,r.ID_USUARIO as ID_USER_REP,r.FECHA_DENUNCIA,r.MOTIVO,r.FECHA_MODERACION FROM comentario c JOIN report r ON c.ID_COMENTARIO=r.ID_COMENTARIO;";
+          
+            $query=$this->db()->query($sql);
+            while ($row = $query->fetch_object()) { 
+                $resultSet[]=$row;
+               
+            }$resultSet=isset($resultSet)?$resultSet:NULL;
+             return $resultSet;}
   
 }
 ?>

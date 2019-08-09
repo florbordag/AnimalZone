@@ -53,12 +53,20 @@ public function crear(){
 
 
 			$existe;
+			$existeuser;
 	if ($usuario->consultar($mail)){ $existe=true;} else {$existe=false;}
+	if ($usuario->consultar($username)){ $existeuser=true;} else {$existeuser=false;}
 
 		if($existe){					
 		echo "<div class=\"alert alert-danger\" role=\"alert\">El mail ingresado ya se encuentra registrado.</div>";
 		$this->registro();
     	}else{ 
+
+			if($existeuser){
+				echo "<div class=\"alert alert-danger\" role=\"alert\">El nombre de usuario ya existe. Elija otro.</div>";
+				$this->registro();
+			} else{
+
 				$save=$usuario->save2($codigo);
 				
 				
@@ -69,8 +77,10 @@ public function crear(){
 				
 
 				//$usuario= $this->setearUsuario($usuario);
-				$this->redirect("Muro","modificarPerfil");}	
+				$this->redirect("Muro","modificarPerfil");}	}
 				
+			
+			
 			} else{ $this->registro();}
 }
 
@@ -150,64 +160,92 @@ public function setearUsuario($user){
 		if(isset($_POST['mail']) && isset($_POST['pass']) ) {
 			$mail= $_POST['mail'];
 			$password = $_POST['pass'];
+
+				if($mail=='admin@admin.com'){
+					
+					$admin= new Admin($this->adapter);
+					if($admin->obtenerpass($password,$mail)){
+
+						$admin=$admin->getAdmin($mail);
+						$_SESSION['ObjAdmin']=$admin;
+						$this->redirect("Admin","index");
+
+
+					} else {
+						echo "<div class=\"alert alert-danger\" role=\"alert\">Contraseña o mail Incorrecto!</div>";
+							$this->view("login2",'');}
+					
+					
+					
+					
+					} else {
+					$user= new Usuario($this->adapter);
+					$user2= new Usuario($this->adapter);
+					if ($user->obtenerpass($password,$mail)){
+						$user= $user->getBy('MAIL',$mail);
+
+						$id=$user['ID_USUARIO'];
+						$username=$user['USERNAME'];
+						$pass=$user['PASSWORD'];
+						$salt=$user['SALT'];
+						$estado=$user['ESTADO'];
+						$fecha_alta=$user['FECHA_ALTA'];
+						$usuario_ult_mod=$user['USUARIO_ULT_MOD'];
+						$fecha_ult_mod=$user['FECHA_ULT_MOD'];
+						$nombre=$user['NOMBRE'];
+						$apellido=$user['APELLIDO'];
+						$sexo=$user['SEXO'];
+						$mail=$user['MAIL'];
+						$imagen_perfil=$user['IMAGEN_PERFIL'];
+						$animal_fav=$user['ANIMAL_FAV'];
+						$pais=$user['PAIS'];
+						$cp=$user['CP'];
+						$nacimiento=$user['NACIMIENTO'];
+						$descripcion=$user['DESCRIPCION'];
+						$intereses=$user['INTERESES'];
+		
+						$_SESSION['id']= $id;
+						$_SESSION['mail']=$mail;
+		
+						$user2->__set('id_usuario',$id); 
+						$user2->__set('username',$username);
+						$user2->__set('pass',$pass);
+						$user2->__set('salt',$salt);
+						$user2->__set('estado',$estado);
+						
+						$user2->__set('fecha_alta',$fecha_alta);
+						$user2->__set('usuario_ult_mod',$usuario_ult_mod);
+						$user2->__set('fecha_ult_mod',$fecha_ult_mod);
+						$user2->__set('nombre',$nombre);
+						$user2->__set('apellido',$apellido);
+						$user2->__set('sexo',$sexo);
+						$user2->__set('mail',$mail);
+						$user2->__set('imagen_perfil',$imagen_perfil);
+						$user2->__set('animal_fav',$animal_fav);
+						$user2->__set('pais',$pais);
+						$user2->__set('cp',$cp);
+						$user2->__set('nacimiento',$nacimiento);
+						$user2->__set('descripcion',$descripcion);
+						$user2->__set('intereses',$intereses);
+		
+					$this->redirect("Muro","mostrarMuro");}
+					
+						//$this->view("index",array("user"=>$user2,));}
+						 else{
+
+							echo "<div class=\"alert alert-danger\" role=\"alert\">Contraseña o mail Incorrecto!</div>";
+							$this->view("login2",'');
+						}
+
+				
+				}
+
+
 			// Chequea si la combinanción usuario, password existen en la BD
 		
 		
-			$user= new Usuario($this->adapter);
-			$user2= new Usuario($this->adapter);
-			if ($user->obtenerpass($password,$mail)){
-				$user= $user->getBy('MAIL',$mail);
-		$id=$user['ID_USUARIO'];
-		$username=$user['USERNAME'];
-		$pass=$user['PASSWORD'];
-		$salt=$user['SALT'];
-		$estado=$user['ESTADO'];
-		$fecha_alta=$user['FECHA_ALTA'];
-		$usuario_ult_mod=$user['USUARIO_ULT_MOD'];
-		$fecha_ult_mod=$user['FECHA_ULT_MOD'];
-		$nombre=$user['NOMBRE'];
-		$apellido=$user['APELLIDO'];
-		$sexo=$user['SEXO'];
-		$mail=$user['MAIL'];
-		$imagen_perfil=$user['IMAGEN_PERFIL'];
-		$animal_fav=$user['ANIMAL_FAV'];
-		$pais=$user['PAIS'];
-		$cp=$user['CP'];
-		$nacimiento=$user['NACIMIENTO'];
-		$descripcion=$user['DESCRIPCION'];
-		$intereses=$user['INTERESES'];
 
-			$_SESSION['id']= $id;
-			$_SESSION['mail']=$mail;
-
-				$user2->__set('id_usuario',$id); 
-				$user2->__set('username',$username);
-				$user2->__set('pass',$pass);
-				$user2->__set('salt',$salt);
-				$user2->__set('estado',$estado);
-				
-				$user2->__set('fecha_alta',$fecha_alta);
-				$user2->__set('usuario_ult_mod',$usuario_ult_mod);
-				$user2->__set('fecha_ult_mod',$fecha_ult_mod);
-				$user2->__set('nombre',$nombre);
-				$user2->__set('apellido',$apellido);
-				$user2->__set('sexo',$sexo);
-				$user2->__set('mail',$mail);
-				$user2->__set('imagen_perfil',$imagen_perfil);
-				$user2->__set('animal_fav',$animal_fav);
-				$user2->__set('pais',$pais);
-				$user2->__set('cp',$cp);
-				$user2->__set('nacimiento',$nacimiento);
-				$user2->__set('descripcion',$descripcion);
-				$user2->__set('intereses',$intereses);
-
-		     $this->redirect("Muro","mostrarMuro");}
-				//$this->view("index",array("user"=>$user2,));}
-				 else{
-					echo "<div class=\"alert alert-danger\" role=\"alert\">Contraseña o mail Incorrecto!</div>";
-					$this->view("login2",'');
-				}}
-
+			}
 	}
 
 
